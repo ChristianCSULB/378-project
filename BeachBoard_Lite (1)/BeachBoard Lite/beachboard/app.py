@@ -128,6 +128,9 @@ def create_app(test_config=None):
     @app.get("/api/members/<int:club_id>")
     @login_required
     def members_api(club_id):
+        if g.user["role"] != "admin" and club_role(club_id) is None:
+            abort(403) #causes HTTP 403 Forbidden
+
         rows = get_db().execute(
             """SELECT u.id, u.display_name, u.email, u.date_of_birth, m.club_role
                FROM memberships m JOIN users u ON u.id = m.user_id
