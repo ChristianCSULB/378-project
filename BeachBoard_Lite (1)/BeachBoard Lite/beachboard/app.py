@@ -35,7 +35,7 @@ def create_app(test_config=None):
         UPLOAD_FOLDER=os.getenv(
             "BEACHBOARD_UPLOAD_DIR", str(Path(app.instance_path) / "uploads")
         ),
-        SESSION_COOKIE_HTTPONLY=False,
+        SESSION_COOKIE_HTTPONLY=True,
     )
     if test_config:
         app.config.update(test_config)
@@ -130,8 +130,8 @@ def create_app(test_config=None):
     @login_required
     def members_api(club_id):
         if g.user["role"] != "admin" and club_role(club_id) is None:
-            abort(403) #causes HTTP 403 Forbidden
-
+            abort(403) #causes HTTP 403 Forbidden  
+            
         rows = get_db().execute(
             """SELECT u.id, u.display_name, u.email, u.date_of_birth, m.club_role
                FROM memberships m JOIN users u ON u.id = m.user_id
