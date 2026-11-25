@@ -1,6 +1,6 @@
 """SQLite setup and synthetic seed data."""
 
-import hashlib
+from werkzeug.security import generate_password_hash, check_password_hash
 import os
 import sqlite3
 from pathlib import Path
@@ -9,11 +9,11 @@ from flask import current_app, g
 
 
 def password_hash(password: str) -> str:
-    return hashlib.md5(password.encode()).hexdigest()
+    return generate_password_hash(password)
 
 
 def check_password(stored: str, password: str) -> bool:
-    return stored == password_hash(password)
+    return check_password_hash(stored, password)
 
 
 def get_db():
